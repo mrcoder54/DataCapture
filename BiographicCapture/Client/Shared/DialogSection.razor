@@ -1,0 +1,38 @@
+﻿@using BiographicCapture.Shared;
+
+
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="sName" Label="Name" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddSection">@addOrEdit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string sName { get; set; } = string.Empty;
+
+    private string addOrEdit = "Add Section";
+
+    protected override void OnParametersSet()
+    {
+        if(!string.IsNullOrEmpty(sName))
+            addOrEdit = "Edit Section";
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void AddSection()
+    {
+        Snackbar.Add("Section Added", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(sName));
+    }
+}

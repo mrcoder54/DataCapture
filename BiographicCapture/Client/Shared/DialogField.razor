@@ -1,0 +1,48 @@
+﻿@using BiographicCapture.Shared;
+
+
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="fName" Label="Name" />
+        <MudSelect  @bind-Value="@fType" T="string" Label="Type" AnchorOrigin="Origin.BottomCenter">
+            @foreach(var f in Enum.GetValues(typeof(BiographicCapture.Shared.FieldType)))
+            {
+                <MudSelectItem Value="@f.ToString()" />
+            }
+        </MudSelect>
+        @if(fType == "ComboBox")
+        {
+            <MudText>Add Control to allow adding selection options</MudText>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddField">Add Field</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private string fName { get; set; } = string.Empty;
+    private string fType { get; set; } = string.Empty;
+
+    private void Cancel()
+    {
+        DialogResult.Cancel();
+        MudDialog.Cancel();
+    }
+
+    private void AddField()
+    {
+        var field = new Field()
+        {
+            Name = fName,
+                FieldType = (BiographicCapture.Shared.FieldType)Enum.Parse(typeof(BiographicCapture.Shared.FieldType), fType)
+        };
+        Snackbar.Add("Field Added", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(field));
+    }
+}
