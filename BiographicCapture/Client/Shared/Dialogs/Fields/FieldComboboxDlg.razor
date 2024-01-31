@@ -13,15 +13,15 @@
             <MudItem>
                 <MudTextField @bind-Value="cValue" Label="Value" />
             </MudItem>
-            <MudItem>
-                <MudIconButton Icon="@Icons.Material.Filled.Add" @onclick="@AddOption" />
+            <MudItem Class="py-8 d-flex flex-1">
+                <MudIconButton Icon="@Icons.Material.Filled.Add" @onclick="@AddOption" Color="Color.Primary"/>
             </MudItem>
         </MudGrid>
         <MudPaper Width="300px">
             <MudList Clickable="true">
                 @foreach (var option in fOptions)
                 {
-                    <MudListItem Text="@option.Key" Icon="@Icons.Material.Filled.Delete" />
+                    <MudListItem Text="@option.Key" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary"/>
                 }
             </MudList>
         </MudPaper>

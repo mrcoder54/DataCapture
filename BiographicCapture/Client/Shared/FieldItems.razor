@@ -2,6 +2,11 @@
 {
     switch (field.FieldType)
     {
+        case BiographicCapture.Shared.FieldType.Date:
+            <MudItem xs="12" md="12" lg="12" xl="12">
+                <MudDatePicker Label="@field.Name" Variant="Variant.Filled" @bind-Text="@field.Value" ></MudDatePicker>
+            </MudItem>
+            break;
         case BiographicCapture.Shared.FieldType.ComboBox:
             <MudItem xs="12" md="12" lg="12" xl="12">
                 @if(field.Picklist != null)
