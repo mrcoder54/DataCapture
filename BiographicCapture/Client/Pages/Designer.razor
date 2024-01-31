@@ -1,6 +1,4 @@
 ﻿@page "/designer"
-@using BiographicCapture.Shared;
-
 @inject IDialogService DialogService
 
 <MudButton Variant="Variant.Filled" @onclick="AddSection" Color="@Color.Primary">Add Section</MudButton>
@@ -14,15 +12,13 @@
                         <MudText Typo="Typo.h6">@sec.Name</MudText>
                     </MudPaper>
                         <MudGrid Spacing="2" Justify="Justify.Center">
-                            <MudItem xs="12">
-                                <MudButton Variant="Variant.Filled" @onclick="@(() => AddField(@sec.Name))" Color="@Color.Primary">Add Field</MudButton>
+                            <MudItem xs="6">
+                                <MudButton Variant="Variant.Filled" @onclick="@(() => AddField<FieldTextDlg>(@sec.Name))" Color="@Color.Primary">Add Text</MudButton>
                             </MudItem>
-                            @foreach (var field in sec.Fields)
-                            { 
-                                <MudItem xs="12" md="12" lg="12" xl="12">
-                                    <MudTextField Label="@field.Name" Variant="Variant.Text" @bind-Value="@field.Value" ></MudTextField>
-                                </MudItem>
-                            }
+                            <MudItem xs="6">
+                                <MudButton Variant="Variant.Filled" @onclick="@(() => AddField<FieldComboboxDlg>(@sec.Name))" Color="@Color.Primary">Add Combobox</MudButton>
+                            </MudItem>
+                            <FieldItems Fields="sec.Fields"/>
                         </MudGrid>
                 </MudTabPanel>     
             }
@@ -37,7 +33,7 @@
 
     private async Task AddSection()
     {
-        var dialog = await DialogService.ShowAsync<DialogSection>("Add Section");
+        var dialog = await DialogService.ShowAsync<SectionDlg>("Add Section");
         var result = await dialog.Result;
 
         if (!result.Canceled)
@@ -54,10 +50,10 @@
 
     private async Task EditSection(string sectionName)
     {
-        var dlgParameters = new DialogParameters<DialogSection>();
+        var dlgParameters = new DialogParameters<SectionDlg>();
         dlgParameters.Add(x => x.sName, sectionName);
 
-        var dialog = await DialogService.ShowAsync<DialogSection>("Edit Section", dlgParameters);
+        var dialog = await DialogService.ShowAsync<SectionDlg>("Edit Section", dlgParameters);
         var result = await dialog.Result;
 
         if (!result.Canceled)
@@ -70,9 +66,11 @@
         }
     }
 
-    private async Task AddField(string sectionName)
+    private async Task AddField<T>(string sectionName)
     {
-        var dialog = await DialogService.ShowAsync<DialogField>("Add Field");
+        var type = typeof(T);
+
+        var dialog = await DialogService.ShowAsync(type, "Add Field");
         var result = await dialog.Result;
 
         if (!result.Canceled)

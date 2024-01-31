@@ -1,0 +1,69 @@
+﻿@using BiographicCapture.Shared;
+
+
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="fName" Label="Name" />
+        <MudGrid>
+            <MudItem>
+                <MudTextField @bind-Value="cKey" Label="Key" />
+            </MudItem>
+            <MudItem>
+                <MudTextField @bind-Value="cValue" Label="Value" />
+            </MudItem>
+            <MudItem>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" @onclick="@AddOption" />
+            </MudItem>
+        </MudGrid>
+        <MudPaper Width="300px">
+            <MudList Clickable="true">
+                @foreach (var option in fOptions)
+                {
+                    <MudListItem Text="@option.Key" Icon="@Icons.Material.Filled.Delete" />
+                }
+            </MudList>
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddField">Add Field</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private string fName { get; set; } = string.Empty;
+    private Dictionary<string, string> fOptions { get; set; } = new();
+    private BiographicCapture.Shared.FieldType fType { get; set; } = BiographicCapture.Shared.FieldType.ComboBox;
+
+    private string cKey { get; set; } = string.Empty;
+    private string cValue { get; set; } = string.Empty;
+
+    private void Cancel()
+    {
+        DialogResult.Cancel();
+        MudDialog.Cancel();
+    }
+
+    private void AddOption()
+    {
+        fOptions.Add(cKey, cValue);
+        cKey = string.Empty;
+        cValue = string.Empty;
+    }
+
+    private void AddField()
+    {
+        var field = new Field()
+            {
+                Name = fName,
+                FieldType = fType,
+                Picklist = fOptions
+            };
+        Snackbar.Add("Field Added", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(field));
+    }
+}

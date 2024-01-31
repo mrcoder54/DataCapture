@@ -6,16 +6,6 @@
 <MudDialog>
     <DialogContent>
         <MudTextField @bind-Value="fName" Label="Name" />
-        <MudSelect  @bind-Value="@fType" T="string" Label="Type" AnchorOrigin="Origin.BottomCenter">
-            @foreach(var f in Enum.GetValues(typeof(BiographicCapture.Shared.FieldType)))
-            {
-                <MudSelectItem Value="@f.ToString()" />
-            }
-        </MudSelect>
-        @if(fType == "ComboBox")
-        {
-            <MudText>Add Control to allow adding selection options</MudText>
-        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -27,7 +17,7 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     private string fName { get; set; } = string.Empty;
-    private string fType { get; set; } = string.Empty;
+    private BiographicCapture.Shared.FieldType fType { get; set; } = BiographicCapture.Shared.FieldType.Text;
 
     private void Cancel()
     {
@@ -38,10 +28,10 @@
     private void AddField()
     {
         var field = new Field()
-        {
-            Name = fName,
-                FieldType = (BiographicCapture.Shared.FieldType)Enum.Parse(typeof(BiographicCapture.Shared.FieldType), fType)
-        };
+            {
+                Name = fName,
+                FieldType = fType
+            };
         Snackbar.Add("Field Added", Severity.Success);
         MudDialog.Close(DialogResult.Ok(field));
     }

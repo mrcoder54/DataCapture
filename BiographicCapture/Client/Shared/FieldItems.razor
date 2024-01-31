@@ -1,0 +1,31 @@
+﻿@foreach (var field in Fields)
+{
+    switch (field.FieldType)
+    {
+        case BiographicCapture.Shared.FieldType.ComboBox:
+            <MudItem xs="12" md="12" lg="12" xl="12">
+                @if(field.Picklist != null)
+                {
+                    <MudSelect Label="@field.Name" Variant="Variant.Text"  @bind-Value="@field.Value" >
+                        @foreach (var option in field.Picklist)
+                        {
+                            <MudSelectItem Value="@option.Key">@option.Key</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            </MudItem>
+            break;
+
+        case BiographicCapture.Shared.FieldType.Text:
+        default:
+            <MudItem xs="12" md="12" lg="12" xl="12">
+                    <MudTextField Label="@field.Name" Variant="Variant.Text" @bind-Value="@field.Value"></MudTextField>
+            </MudItem>
+            break;
+    }
+}
+
+@code {
+    [Parameter]
+    public List<Field> Fields { get; set; } = new();
+}
